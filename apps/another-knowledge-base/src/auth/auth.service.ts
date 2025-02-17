@@ -1,4 +1,69 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
+import { AuthDto } from './dto/auth.dto';
+import * as argon2 from 'argon2';
+import { mapUserToDto } from '../users/dto/user.mapper';
+import { JwtPayload } from './dto/jwt.payload.dto';
+import { Response } from 'express';
 
 @Injectable()
-export class AuthService {}
+export class AuthService {
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService
+  ) {}
+
+  async register(dto: AuthDto) {
+    const { email, password } = dto;
+    let user = await this.usersService.findOneByEmail(email);
+    if (user) {
+      throw new ConflictException(`User with email ${email} already exists`);
+    }
+    const hashed_password = await argon2.hash(password);
+    user = await this.usersService.create({ email, hashed_password });
+    return mapUserToDto(user);
+  }
+
+  async login(dto: AuthDto, res: Response) {
+    const { email, password } = dto;
+    const user = await this.usersService.findOneByEmail(email);
+    const isMatch = await argon2.verify(user.hashed_password, password);
+    if (!isMatch) {
+      throw new UnauthorizedException(`Password is incorrect`);
+    }
+    const token = await this.generateAccessToken({
+      sub: user.id,
+      email: user.email,
+    });
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'none',
+      maxAge: +process.env.JWT_EXPIRATION * 1000,
+    });
+  }
+
+  async validateToken(token?: string): Promise<JwtPayload> {
+    if (!token) {
+      throw new UnauthorizedException(`Token is missing`);
+    }
+    try {
+      return await this.jwtService.verifyAsync<JwtPayload>(token);
+    } catch (e) {
+      Logger.error(e);
+      throw new UnauthorizedException(`Token is invalid`);
+    }
+  }
+
+  private async generateAccessToken(payload: JwtPayload) {
+    return this.jwtService.signAsync(payload, {
+      expiresIn: +process.env.JWT_EXPIRATION,
+    });
+  }
+}
