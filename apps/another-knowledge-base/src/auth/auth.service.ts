@@ -21,12 +21,9 @@ export class AuthService {
 
   async register(dto: AuthDto) {
     const { email, password } = dto;
-    let user = await this.usersService.findOneByEmail(email);
-    if (user) {
-      throw new ConflictException(`User with email ${email} already exists`);
-    }
+    await this.usersService.checkThatUserExistsWithEmail(email);
     const hashed_password = await argon2.hash(password);
-    user = await this.usersService.create({ email, hashed_password });
+    const user = await this.usersService.create({ email, hashed_password });
     return mapUserToDto(user);
   }
 
@@ -37,16 +34,11 @@ export class AuthService {
     if (!isMatch) {
       throw new UnauthorizedException(`Password is incorrect`);
     }
-    const token = await this.generateAccessToken({
+    const accessToken = await this.generateAccessToken({
       sub: user.id,
       email: user.email,
     });
-    res.cookie('access_token', token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'none',
-      maxAge: +process.env.JWT_EXPIRATION * 1000,
-    });
+    return { accessToken };
   }
 
   async validateToken(token?: string): Promise<JwtPayload> {

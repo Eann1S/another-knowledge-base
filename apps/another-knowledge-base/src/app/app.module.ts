@@ -4,6 +4,7 @@ import { User } from '../users/user.entity';
 import { UsersModule } from '../users/users.module';
 import { AuthModule } from '../auth/auth.module';
 import { PostsModule } from '../posts/posts.module';
+import { TagsModule } from '../tags/tags.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PostsModule } from '../posts/posts.module';
     UsersModule,
     AuthModule,
     PostsModule,
+    TagsModule,
   ],
   controllers: [],
   providers: [],

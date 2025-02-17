@@ -22,7 +22,7 @@ export class AuthController {
   @ApiOkResponse()
   @Public()
   @Post('login')
-  async login(@Body() dto: AuthDto, @Res() res: Response) {
+  async login(@Body() dto: AuthDto, @Res({ passthrough: true }) res: Response) {
     return this.authService.login(dto, res);
   }
 }

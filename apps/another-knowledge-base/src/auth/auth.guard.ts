@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { Reflector } from '@nestjs/core';
@@ -17,7 +22,7 @@ export class AuthGuard implements CanActivate {
       return true;
     }
     const request: Request = context.switchToHttp().getRequest();
-    const token = request.cookies.access_token;
+    const token = request.headers.authorization?.split(' ')[1] || null;
     const payload = await this.authService.validateToken(token);
     request['payload'] = payload;
     return true;

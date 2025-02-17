@@ -12,13 +12,18 @@ import cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder().build();
+  const config = new DocumentBuilder().addBearerAuth().build();
   const docFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, docFactory);
 
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
+
   app.use(cookieParser());
+  app.enableCors({
+    origin: ['http://localhost:5000'],
+    credentials: true,
+  });
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const port = process.env.PORT || 3000;
