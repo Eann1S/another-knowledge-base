@@ -1,7 +1,7 @@
 import { mapTagToDto } from '../../tags/dto/tags.mapper';
 import { mapUserToDto } from '../../users/dto/user.mapper';
-import { Post } from '../post.entity';
 import { PostDto } from './post.dto';
+import { Post } from '../entity/post.entity';
 
 export function mapPostToDto(post: Post): PostDto {
   if (!post) {

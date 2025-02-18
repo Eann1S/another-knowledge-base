@@ -1,9 +1,8 @@
-import { Body, Controller, HttpCode, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { Public } from './public.route';
-import { AuthDto } from './dto/auth.dto';
-import { Response } from 'express';
+import { AuthDto } from '@another-knowledge-base/shared';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -22,7 +21,7 @@ export class AuthController {
   @ApiOkResponse()
   @Public()
   @Post('login')
-  async login(@Body() dto: AuthDto, @Res({ passthrough: true }) res: Response) {
-    return this.authService.login(dto, res);
+  async login(@Body() dto: AuthDto) {
+    return this.authService.login(dto);
   }
 }

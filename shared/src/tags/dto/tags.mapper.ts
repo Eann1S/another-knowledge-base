@@ -1,4 +1,4 @@
-import { Tag } from "../tag.entity";
+import { Tag } from "../entity/tag.entity";
 import { TagDto } from "./tag.dto";
 
 export function mapTagToDto(tag: Tag): TagDto {

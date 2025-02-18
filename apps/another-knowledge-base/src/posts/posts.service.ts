@@ -4,17 +4,12 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { FindOptionsWhere, In, Or, Repository } from 'typeorm';
-import { Post } from './post.entity';
+import { FindOptionsWhere, In, Repository } from 'typeorm';
+import { Post } from '@another-knowledge-base/shared';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PostDto } from './dto/post.dto';
-import { mapPostToDto } from './dto/post.mapper';
-import { CreatePostDto } from './dto/create.post.dto';
-import { FilterPostsDto } from './dto/filter.posts.dto';
-import { UpdatePostDto } from './dto/update.post.dto';
+import { PostDto, mapPostToDto, CreatePostDto, FilterPostsDto, UpdatePostDto } from '@another-knowledge-base/shared';
 import { TagsService } from '../tags/tags.service';
-import { isArray, isString } from 'class-validator';
-import { Tag } from '../tags/tag.entity';
+import { isString } from 'class-validator';
 
 @Injectable()
 export class PostsService {
@@ -25,7 +20,7 @@ export class PostsService {
 
   async create(authorId: number, dto: CreatePostDto): Promise<PostDto> {
     try {
-      const tags = await this.tagsService.createMany(dto.tags);
+      const tags = await this.tagsService.createMany(dto.tags || []);
       const { title, content, isPublic } = dto;
       const post = await this.postsRepository.save({
         title,

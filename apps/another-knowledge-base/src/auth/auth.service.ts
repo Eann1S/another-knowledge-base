@@ -1,16 +1,14 @@
 import {
-  ConflictException,
   Injectable,
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { AuthDto } from './dto/auth.dto';
+import { AuthDto } from '@another-knowledge-base/shared';
 import * as argon2 from 'argon2';
-import { mapUserToDto } from '../users/dto/user.mapper';
-import { JwtPayload } from './dto/jwt.payload.dto';
-import { Response } from 'express';
+import { mapUserToDto } from '@another-knowledge-base/shared';
+import { JwtPayload } from '@another-knowledge-base/shared';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +25,7 @@ export class AuthService {
     return mapUserToDto(user);
   }
 
-  async login(dto: AuthDto, res: Response) {
+  async login(dto: AuthDto) {
     const { email, password } = dto;
     const user = await this.usersService.findOneByEmail(email);
     const isMatch = await argon2.verify(user.hashed_password, password);

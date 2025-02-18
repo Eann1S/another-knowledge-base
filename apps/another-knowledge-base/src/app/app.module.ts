@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../users/user.entity';
+import { User, Post, Tag } from '@another-knowledge-base/shared';
 import { UsersModule } from '../users/users.module';
 import { AuthModule } from '../auth/auth.module';
 import { PostsModule } from '../posts/posts.module';
@@ -15,7 +15,7 @@ import { TagsModule } from '../tags/tags.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [User],
+      entities: [User, Post, Tag],
       synchronize: true,
       autoLoadEntities: true,
     }),

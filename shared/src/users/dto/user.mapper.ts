@@ -1,5 +1,5 @@
-import { User } from '../user.entity';
-import { UserDto } from './user.dto';
+import { User } from '../entity/user.entity';
+import { UserDto } from '../dto/user.dto';
 
 export function mapUserToDto(user: User): UserDto {
   if (!user) {

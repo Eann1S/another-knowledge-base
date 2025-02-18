@@ -5,9 +5,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FindOptionsWhere, Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '@another-knowledge-base/shared';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from './dto/create.user.dto';
+import { CreateUserDto } from '@another-knowledge-base/shared';
 
 @Injectable()
 export class UsersService {

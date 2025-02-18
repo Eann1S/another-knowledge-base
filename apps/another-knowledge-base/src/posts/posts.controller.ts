@@ -12,10 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create.post.dto';
-import { JwtPayload } from '../auth/dto/jwt.payload.dto';
-import { FilterPostsDto } from './dto/filter.posts.dto';
-import { UpdatePostDto } from './dto/update.post.dto';
+import { CreatePostDto, JwtPayload, FilterPostsDto, UpdatePostDto } from '@another-knowledge-base/shared';
 import { Public } from '../auth/public.route';
 
 @ApiTags('posts')
