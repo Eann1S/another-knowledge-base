@@ -1,7 +1,10 @@
 /* eslint-disable */
 
 module.exports = async function () {
-  // Put clean up logic here (e.g. stopping services, docker-compose, etc.).
-  // Hint: `globalThis` is shared between setup and teardown.
-  console.log(globalThis.__TEARDOWN_MESSAGE__);
+  if (globalThis.__SERVER_PROCESS__) {
+    globalThis.__SERVER_PROCESS__.kill();
+  }
+
+  const dbContainer = globalThis.__DB_CONTAINER__;
+  await dbContainer.stop();
 };
